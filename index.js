@@ -20,7 +20,7 @@ function decodeNumber(str) {
   let out = 0
   let factor = 1
   for(let i = str.length - 1; i >= 0; i--) {
-    out += decodeCharacter(str[i])
+    out += decodeCharacter(str[i]) * factor
     factor *= characters.length
   }
   return out
@@ -28,7 +28,7 @@ function decodeNumber(str) {
 
 function encodeDate(date = new Date()) {
   return '' +
-    characters[date.getUTCFullYear() % characters.length] +
+    encodeNumber(date.getUTCFullYear()).padStart(2, '0') +
     characters[date.getUTCMonth() + 1] +
     characters[date.getUTCDate()] +
     characters[date.getUTCHours()] +
@@ -40,17 +40,13 @@ function encodeDate(date = new Date()) {
 
 function decodeDate(str = encodeDate(new Date)) {
   const date = new Date()
-  const firstYear = date.getUTCFullYear()-31
-  const firstYearNumber = firstYear % characters.length
-  let yearNumber = decodeCharacter(str[0])
-  if(yearNumber < firstYearNumber) yearNumber += characters.length
-  date.setUTCFullYear(yearNumber - firstYearNumber + firstYear)
-  date.setUTCMonth(decodeCharacter(str[1]) - 1)
-  date.setUTCDate(decodeCharacter(str[2]))
-  date.setUTCHours(decodeCharacter(str[3]))
-  date.setUTCMinutes(decodeCharacter(str[4]))
-  date.setUTCSeconds(decodeCharacter(str[5]))
-  date.setUTCMilliseconds(decodeCharacter(str[6]) * 60 + decodeCharacter(str[7]))
+  date.setUTCFullYear(decodeNumber(str.slice(0, 2)))
+  date.setUTCMonth(decodeCharacter(str[2]) - 1)
+  date.setUTCDate(decodeCharacter(str[3]))
+  date.setUTCHours(decodeCharacter(str[4]))
+  date.setUTCMinutes(decodeCharacter(str[5]))
+  date.setUTCSeconds(decodeCharacter(str[6]))
+  date.setUTCMilliseconds(decodeCharacter(str[7]) * 60 + decodeCharacter(str[7]))
   return date
 }
 
