@@ -102,7 +102,7 @@ function verifyUidSource(uid, source) {
 
 module.exports = {
   encodeDate,
-  decodeData,
+  decodeDate,
   encodeNumber,
   hashCode,
   randomString,
